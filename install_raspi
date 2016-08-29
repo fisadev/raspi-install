@@ -21,9 +21,9 @@ read
 scp steps_at_raspi pi@raspi:/home/pi/steps_at_raspi
 
 # copy extra files needed
-scp ../scripts/update_raspi_fisadev_com pi@raspi:/home/pi/update_raspi_fisadev_com
-scp ../scripts/backup_gmail pi@raspi:/home/pi/backup_gmail
-scp ../dotfiles/.mbsyncrc pi@raspi:/home/pi/.mbsyncrc
+scp /home/fisa/devel/mios/scripts/update_raspi_fisadev_com pi@raspi:/home/pi/update_raspi_fisadev_com
+scp /home/fisa/devel/mios/scripts/backup_gmail pi@raspi:/home/pi/backup_gmail
+scp /home/fisa/devel/mios/dotfiles/.mbsyncrc pi@raspi:/home/pi/.mbsyncrc
 scp crontab pi@raspi:/home/pi/crontab
 
 # connect to the raspi, to run the rest of the installation there
