@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# avoid trying to connect using the ssh key
+echo "Rename your pi hosts on your /home/fisa/.ssh/config to something else."
+echo "Then, press enter."
+read
+
+# remove old raspi signatures from known hosts
+ssh-keygen -f "/home/fisa/.ssh/known_hosts" -R raspi
+ssh-keygen -f "/home/fisa/.ssh/known_hosts" -R raspi.fisadev.com.ar
+
+# copy ssh keys to raspi
+ssh-copy-id -i /home/fisa/.ssh/raspi_rsa.pub pi@raspi
+
+# now use the ssh keys
+echo "Restore your pi hosts on your /home/fisa/.ssh/config ."
+echo "Then, press enter."
+read
+
+# copy config script to raspi
+scp steps_at_raspi pi@raspi:/home/pi/steps_at_raspi
+
+# copy extra files needed
+scp ../scripts/update_raspi_fisadev_com pi@raspi:/home/pi/update_raspi_fisadev_com
+scp ../scripts/backup_gmail pi@raspi:/home/pi/backup_gmail
+scp ../dotfiles/.mbsyncrc pi@raspi:/home/pi/.mbsyncrc
+scp crontab pi@raspi:/home/pi/crontab
+
+# connect to the raspi, to run the rest of the installation there
+echo "Now will open a shell in the raspi. Once there, run './steps_at_raspi'"
+echo "Press enter when ready."
+read
+ssh pi@raspi

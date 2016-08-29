@@ -1,0 +1,41 @@
+#!/bin/bash
+# basic raspberry config
+sudo raspi-config
+
+# create user fisa
+sudo adduser fisa
+sudo adduser fisa sudo
+
+# required packages
+sudo apt-get install nocache git isync
+sudo -u fisa git clone https://github.com/dustinkirkland/run-one.git /home/fisa/run-one
+sudo ln -s /home/fisa/run-one/run-one /usr/bin/run-one
+
+# install crontab and scripts
+sudo mv update_raspi_fisadev_com backup_gmail .mbsyncrc /home/fisa/
+sudo crontab -u fisa crontab
+
+# copy authorized key to fisa user too
+sudo -u fisa mkdir -p /home/fisa/.ssh
+sudo cp /home/pi/.ssh/authorized_keys /home/fisa/.ssh/authorized_keys
+
+# set ownership of fisa's files
+sudo chown fisa:fisa /home/fisa/ -R
+
+# backups mounted at boot (and RO when not mounted)
+sudo -u fisa mkdir -p /home/fisa/backups
+sudo chmod 544 /home/fisa/backups
+echo "/dev/sda1 /home/fisa/backups    ext4    defaults 0   0" | sudo tee -a /etc/fstab
+
+# change default password
+passwd
+
+echo "Now will open the ssh config."
+echo "      PermitRootLogin no"
+echo "      AllowUsers fisa pi"
+echo "Memorize this, and press enter when ready (the editor will hide this message)."
+read
+sudo vi /etc/ssh/sshd_config
+
+# reboot
+sudo reboot
